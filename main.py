@@ -19,7 +19,7 @@ class GradientDecent:
         self.iters = iterations
         self.loss = []
 
-    # calculating gradient of weights
+    # calculating gradients of weights
     def fit(self, x_data, y_data, step=1):
         y_pred = self.w1 * (x_data ** 2) + self.w2 * x_data + self.w3
         
@@ -28,7 +28,7 @@ class GradientDecent:
         if step != 1:
             print(f"epoch 1: a = {self.w1:.3f}, b = {self.w2:.3f}, c = {self.w3:.3f}, loss = {loss:.8f}")
         for i in range(self.iters):
-            # updating predicted quadratic and loss for new weights
+            # updating predicted output and loss for new weights
             y_pred = self.w1 * (x_data**2) + self.w2 * x_data + self.w3
 
             loss = np.dot(np.ones(len(y_data)), (y_data - y_pred) ** 2)
@@ -38,7 +38,7 @@ class GradientDecent:
             if (i + 1) % step == 0:
                 print(f"epoch {i + 1}: a = {self.w1:.3f}, b = {self.w2:.3f}, c = {self.w3:.3f}, loss = {loss:.8f}")
 
-            # Updating weights
+            # Updating weights with negative gradients
             da = np.dot(x_data ** 2, y_data - y_pred)
             db = np.dot(x_data, y_data - y_pred)
             dc = np.dot(np.ones(len(y_data)), y_data - y_pred)
@@ -55,7 +55,7 @@ class GradientDecent:
         return self.loss
 
 
-# starting predictions for the slope and intercept
+# starting predictions
 a_pred = np.random.randn()
 b_pred = np.random.randn()
 c_pred = np.random.randn()
@@ -64,17 +64,13 @@ num_iters = 100000
 gradient = GradientDecent(w1=a_pred, w2=b_pred, w3=c_pred, learning_rate=lr, iterations=num_iters)
 print(gradient.fit(x, y, step=10000))
 
-# graph line with mat plot lib
+# graph line with matplotlib
 y_predicted = gradient.predict(x_points)
 cmap = plt.get_cmap('viridis')
 fig = plt.figure(figsize=(8, 6))
 m1 = plt.scatter(x, y, color=cmap(0.5), s=10)
-# quadratic is correct, this prints out a piecewise line instead ???
-# probably because x_data is only defined for certain x values
 plt.figure(1)
 plt.plot(x_points, y_predicted, color='black', linewidth=2, label="Prediction")
-# don't plot with x and loss_func, should plot with epoch instead of x
-# doesn't make sense otherwise
 plt.figure(2)
 plt.yscale('log')
 plt.plot(range(num_iters), gradient.loss, color='red', linewidth=2, label="Loss")
